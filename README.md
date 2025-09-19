@@ -1,11 +1,10 @@
-
 # Crypto AI Analytics – Livepeer (LPT) On-Chain Data
 
 ## 📌 Description
 This project aims to analyze on-chain flows related to the **Livepeer (LPT)** token in order to detect early signals of **buying/selling pressure** and their potential impact on price.
 
 ## 📂 Included Dataset
-### `lpt_transfers_binance_hotwallet20.csv`
+### `data/lpt_transfers_binance_hotwallet20.csv`
 Extract of **LPT ERC-20 transfers** for the address **Binance Hot Wallet 20**  
 `0xF977814e90dA44bFA03b6295A0616a897441aceC`
 
@@ -32,22 +31,58 @@ Extract of **LPT ERC-20 transfers** for the address **Binance Hot Wallet 20**
 
 ---
 
-## 🚀 Next Steps
-- Extend analysis to other **CEXs (Kraken, Coinbase, Gate, etc.)**.  
-- Track **top 20 Livepeer orchestrators** to correlate staking/unbonding events with selling pressure.  
-- Automate a **real-time dashboard** combining on-chain flows + market metrics (Coinglass).
+## 🗺️ Roadmap (Day by Day)
+
+> **Day 1 completed in one morning** 🚀 (setup + first dataset)
+
+**Day 1 – Setup & First Dataset (1 morning)**  
+- Installed Python + pip, verified environment on Windows PowerShell.  
+- Created GitHub repo `crypto-ai-analytics` and configured Git (username/email, PAT).  
+- Built a minimal script to fetch **LPT transfers** via Etherscan:  
+  - `scripts/get_lpt_transfers.py`  
+  - Output sample: `data/lpt_transfers_binance_hotwallet20.csv`  
+- Wrote the first README in English and pushed everything to GitHub.  
+
+**Day 2 – Packaging & Query Options**  
+- Add CLI options to filter by date/block range.  
+- Add basic logging + error handling.  
+- Save both CSV and a quick summary (`docs/summary_day2.md`).  
+
+**Day 3 – Scheduling & More Exchanges**  
+- Add addresses for **Kraken, Coinbase, Gate** and export their datasets to `/data`.  
+- Windows Task Scheduler job that runs daily.  
+- Commit: “feat: daily batch for CEX inflows”.  
+
+**Day 4 – Orchestrators (Top-20)**  
+- Pull Top-20 orchestrators from The Graph Gateway.  
+- Store a daily snapshot (`data/livepeer_top20_orchestrators_YYYY-MM-DD.csv`).  
+- Commit: “feat: top20 snapshot via GraphQL”.  
+
+**Day 5 – Unbond Monitoring**  
+- Collect `Unbond` events for Top-20 (ETH only) and aggregate daily.  
+- Export charts (PNG) and a CSV with 7-day shift + anomaly flags.  
+- Commit: “feat: unbond daily with anomalies”.  
+
+**Day 6 – Market Metrics Integration**  
+- Fetch Open Interest & Funding Rate (Coinglass) for LPT (if available).  
+- Merge with on-chain flows → correlation sketches.  
+- Commit: “feat: merge flows + market metrics”.  
+
+**Day 7 – Weekly Report**  
+- Generate a simple weekly report (Markdown + PNG charts in `/docs`).  
+- Post a short thread on findings (to be linked here).  
+- Commit: “docs: weekly report v1”.  
 
 ---
 
 ## 🎓 Educational Note
 This project is developed as part of an **intensive training program in blockchain & AI engineering applied to crypto trading**.  
-It documents my progress step by step:  
-- **Week 1:** environment setup + first on-chain script + Binance LPT dataset.  
-- Next steps will aim to enrich the analysis and automate signal detection.  
+It documents my progress step by step with a focus on **daily learning and building**.  
 
 ---
 
 ✍️ **Author:** cryptopromptaiHAH  
 📅 **First dataset:** September 2025
+
 
 
