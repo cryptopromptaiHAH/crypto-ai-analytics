@@ -73,7 +73,17 @@ Extract of **LPT ERC-20 transfers** for the address **Binance Hot Wallet 20**
 - Post a short thread on findings (to be linked here).  
 - Commit: “docs: weekly report v1”.  
 
----
+------
+
+## 📊 Visualization Example
+
+Daily LPT transfer volumes (sum per day) — extracted from Binance Hot Wallet 20:
+
+![Daily LPT Volume](docs/img/volume_daily_lpt.png)
+
+*Interpretation*:  
+We can clearly see **periods of high spikes** in LPT transfers (notably in early 2025), which may correspond to **CEX liquidity moves or selling pressure events**.
+
 
 ## 🎓 Educational Note
 This project is developed as part of an **intensive training program in blockchain & AI engineering applied to crypto trading**.  
