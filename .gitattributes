@@ -1,11 +1,1 @@
-﻿* text=auto
-
-# Code & docs en LF
-*.py   text eol=lf
-*.sh   text eol=lf
-*.md   text eol=lf
-*.json text eol=lf
-*.csv  text eol=lf
-*.yml  text eol=lf
-*.yaml text eol=lf
-*.txt  text eol=lf
+* text=auto eol=lf
