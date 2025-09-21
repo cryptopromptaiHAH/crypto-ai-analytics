@@ -30,7 +30,7 @@ def make_charts(df: pd.DataFrame, out_dir: str):
     plt.ylabel("LPT")
     plt.tight_layout()
     plt.savefig(out / "volume_daily_lpt.png", dpi=150)
-    plt.close()
+    lines.append("- `img/volume_daily_lpt.png`")
 
     # 2) Top 10 transferts (barres)
     top10 = df.nlargest(10, "value_LPT")[["hash", "value_LPT"]].copy()
