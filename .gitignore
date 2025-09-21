@@ -1,4 +1,4 @@
-# Python cache / temp
+﻿# Python cache / temp
 __pycache__/
 *.pyc
 *.pyo
@@ -8,15 +8,17 @@ __pycache__/
 .ipynb_checkpoints/
 .vscode/
 
-# CSV bruts et temporaires
+# Données CSV brutes (tout data/ ignoré par défaut)
 data/*.csv
 
-# Garder seulement les CSV mensuels propres
+# Garder les CSV mensuels "propres" et nos synthèses
 !data/lpt_transfers_????-??.csv
+!data/topk_netflow_total.csv
+!data/topk_netflow_by_exchange.csv
+!data/top_netflow_anomalies_z2.csv
 
-# Images temporaires
-*.png
-!docs/img/*.png
-
+# Images de docs — garder toutes les PNG sous docs/
+# (on n'ignore plus *.png globalement)
+# Si besoin d'ignorer des rendus lourds, faire par dossier.
 # Logs
 *.log
