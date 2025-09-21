@@ -17,8 +17,8 @@ data/*.csv
 !data/topk_netflow_by_exchange.csv
 !data/top_netflow_anomalies_z2.csv
 
-# Images de docs — garder toutes les PNG sous docs/
-# (on n'ignore plus *.png globalement)
-# Si besoin d'ignorer des rendus lourds, faire par dossier.
+# Images de docs — on n'ignore plus *.png globalement
+# (si besoin d'ignorer des rendus lourds, le faire par dossier)
+
 # Logs
 *.log
