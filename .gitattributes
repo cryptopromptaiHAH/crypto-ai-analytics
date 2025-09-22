@@ -1,1 +1,22 @@
 * text=auto eol=lf
+# Force les fichiers texte en UTF-8 et normalise les fins de lignes
+* text=auto eol=lf
+
+# Garder les fichiers batch/PowerShell en CRLF (Windows natif)
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Markdown et documentation → toujours LF
+*.md text eol=lf
+
+# CSV → normalisé LF (compatible Python, GitHub, Linux)
+*.csv text eol=lf
+
+# Python scripts → toujours LF
+*.py text eol=lf
+
+# Images binaires → pas de conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
