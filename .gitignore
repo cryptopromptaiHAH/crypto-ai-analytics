@@ -23,3 +23,9 @@ data/*.csv
 
 # Logs
 *.log
+# runtime (ne pas versionner)
+logs/*.log
+.agent_memory/*.json
+
+# optionnel — ignorer les rapports auto si tu ne veux pas les garder dans l'historique
+# docs/agent_report_*.md
