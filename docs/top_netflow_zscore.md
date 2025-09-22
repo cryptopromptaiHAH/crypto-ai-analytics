@@ -41,3 +41,4 @@
 
 ### Z-score des anomalies détectées
 ![Z-score](img/netflow_zscore.png)
+
