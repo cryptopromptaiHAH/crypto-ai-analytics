@@ -50,6 +50,8 @@ python src/lpt/lpt_pipeline.py --days 90
   ```bash
   COINGECKO_API_KEY=YOUR_API_KEY_HERE
   ```
+> ⚠️ Ne partagez jamais votre clé API publique dans un dépôt GitHub.  
+> Vous pouvez obtenir une clé gratuite sur [CoinGecko API](https://www.coingecko.com/en/api).
 
 - **Attribution**  
   Data provided by [CoinGecko](https://www.coingecko.com/en/api).
