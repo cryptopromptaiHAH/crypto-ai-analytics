@@ -60,3 +60,10 @@ python src/lpt/lpt_pipeline.py --days 90
 
 ‚úçÔ∏è **Author:** cryptopromptaiHAH  
 üìÖ **Period analyzed:** May‚ÄìJune 2025  
+## ?? Core charts (90d)
+
+![LPT ó APY 30j](docs/img/previews/lpt_apy_30d.jpg)
+
+![LPT ? BTC/ETH ó Corr 30j](docs/img/previews/lpt_corr_30d.jpg)
+
+![LPT ? BTC/ETH ó Corr 60j](docs/img/previews/lpt_corr_60d.jpg)
