@@ -22,6 +22,8 @@
 
 ## 🖼️ Charts
 
-- `img/volume_daily_lpt.png`
+## Charts
+
+- `docs/netflow-anomalies-2025/volume_daily_lpt.png`
 - `docs/top10_transfers_lpt.png`
 - `docs/transfer_size_hist.png`
