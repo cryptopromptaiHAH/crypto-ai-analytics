@@ -6,6 +6,7 @@ import requests
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
+# -------------------- utils génériques --------------------
 def retry(n=3, wait=1.0):
     def deco(fn):
         @functools.wraps(fn)
@@ -95,11 +96,13 @@ def _cg_get(url: str, max_attempts=6) -> requests.Response:
         raise last_exc
     raise RuntimeError("CoinGecko request failed without explicit error")
 
+# -------------------- fetch marché (quotidien) --------------------
 @retry(n=3, wait=1.0)
 def cg_market_chart_range(coin_id: str, vs: str="usd", days: int=400) -> pd.DataFrame:
     """
     Récupère market_chart pour `days` et renvoie un DataFrame QUOTIDIEN:
     colonnes = price, market_cap, volume
+    index = dates (journalières)
     """
     base = os.getenv("COINGECKO_API_BASE", "https://api.coingecko.com")
     url = f"{base}/api/v3/coins/{coin_id}/market_chart?vs_currency={vs}&days={days}"
@@ -112,9 +115,13 @@ def cg_market_chart_range(coin_id: str, vs: str="usd", days: int=400) -> pd.Data
     df = df_price.merge(df_mcap, on='ts_ms').merge(df_vol, on='ts_ms')
     df['ts'] = pd.to_datetime(df['ts_ms'], unit='ms', utc=True).dt.tz_convert(None)
     df = df.drop(columns=['ts_ms']).set_index('ts').sort_index()
-    df = df.resample("1D").last().dropna()
+
+    # 🔧 important: éviter séries plates -> moyenne quotidienne + interpolation
+    df = df.resample("1D").mean().interpolate()
+
     return df
 
+# -------------------- petites métriques --------------------
 def rolling_apy(price: pd.Series, window=30) -> pd.Series:
     return price.pct_change().add(1).rolling(window).apply(lambda x: np.prod(x)-1, raw=False)
 
@@ -131,7 +138,7 @@ def shift_corr(a: pd.Series, b: pd.Series, lag: int=0, window: int=60) -> pd.Ser
         b = b.shift(lag)
     return a.rolling(window).corr(b)
 
-# ---------- CACHE LOCAL ----------
+# -------------------- cache local --------------------
 def load_or_fetch_coin(coin_id: str, vs: str="usd", days: int=400, force_refresh=False) -> pd.DataFrame:
     """
     Charge depuis cache local si dispo, sinon fetch depuis CoinGecko et sauvegarde.
@@ -152,6 +159,4 @@ def load_or_fetch_coin(coin_id: str, vs: str="usd", days: int=400, force_refresh
     df = cg_market_chart_range(coin_id, vs=vs, days=days)
     df.to_csv(fname)
     return df
-
-
 
