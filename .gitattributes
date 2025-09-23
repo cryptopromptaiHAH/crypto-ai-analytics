@@ -1,0 +1,21 @@
+# Normalisation automatique des fins de lignes
+* text=auto
+
+# Scripts Windows ? CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Scripts Linux/Mac ? LF
+*.sh  text eol=lf
+*.py  text eol=lf
+
+# Données et docs ? LF
+*.csv text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Images : pas de conversion
+*.png binary
+*.jpg binary
+*.jpeg binary

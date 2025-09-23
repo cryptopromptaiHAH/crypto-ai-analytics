@@ -7,16 +7,20 @@
 
 ---
 
-![Daily Volume](docs/img/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_volume_daily_lpt.png)
+![Daily Volume](docs/img/previews/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_volume_daily_lpt.jpg)
 
-![Top 10](docs/img/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_top10_transfers_lpt.png)
+![Top 10](docs/img/previews/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_top10_transfers_lpt.jpg)
 
-![Histogram](docs/img/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_transfer_size_hist.png)
+![Histogram](docs/img/previews/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_transfer_size_hist.jpg)
 
-![In vs Out](docs/img/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_in_vs_out.png)
+![In vs Out](docs/img/previews/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_in_vs_out.jpg)
 
-![Netflow](docs/img/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_netflow.png)
+![Netflow](docs/img/previews/lpt_transfers_binance_hotwallet20_2025-05__2025-05-20_2025-06-05_netflow.jpg)
 
 ## Notes
 - Daily volume = somme des transferts LPT par jour (toutes directions).
-- Inflow = vers l’adresse; Outflow = depuis l’adresse; Netflow = In - Out.
+- Inflow = vers l’adresse ; Outflow = depuis l’adresse ; Netflow = In − Out.
+
+
+
+
