@@ -1,31 +1,28 @@
-﻿
+﻿# Crypto AI Analytics — LPT Kit
 
-
-## 📈 Core charts (90d)
-
-![LPT — APY 30j](docs/img/previews/lpt_apy_30d.jpg)
-
-![LPT ↔ BTC/ETH — Corr 30j](docs/img/previews/lpt_corr_30d.jpg)
-
-![LPT ↔ BTC/ETH — Corr 60j](docs/img/previews/lpt_corr_60d.jpg)
-
+Quantitative monitoring of **Livepeer (LPT)**: data downloads, technical indicators, exported charts, and automatic README updates.
 
 ---
 
-<!-- LPT-ASSETS:START -->
-## LPT — Graphes (auto-générés)
+## Overview
 
-*Dernière mise à jour (UTC): **2025-09-25** — Fenêtre: **180 jours** — Devise: **USD***
+- **Data**: market history (Coingecko) over the selected window (default: 180 days).  
+- **Indicators**:
+  - Price + **EMA(20/50)**
+  - **Z-Score** (local normalization)
+  - **Correlation (rolling 60d)** vs **BTC** & **ETH**
+- **Exports**: CSV in `data/` and PNG charts in `outputs/`.
+- **Strategic analysis** (PDF) included in `docs/`.
 
-**Price & EMAs**
-![LPT Price & EMAs](outputs/lpt_price_ema.png)
+---
 
-**Z-Score (60j)**
+## Results — LPT (last 180 days, vs USD)
+
+### Price & EMA(20/50)
+![LPT Price + EMA](outputs/lpt_price_ema.png)
+
+### Z-Score (local normalization)
 ![LPT Z-Score](outputs/lpt_zscore.png)
 
-**Rolling APY (30j)**
-![LPT APY](outputs/lpt_apy.png)
-
-**Corrélation (60j) — vs BTC & ETH**
-![LPT Corr](outputs/lpt_corr.png)
-<!-- LPT-ASSETS:END -->
+### Correlation (60d) — vs BTC & ETH
+![Correlation LPT (60d]()
