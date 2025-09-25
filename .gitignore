@@ -21,13 +21,21 @@ data/*.csv
 # (we do NOT ignore *.png globally; docs/img/ is already tracked)
 # If you need to ignore heavy renders, do it per-folder.
 img/previews/
+
+# Ignore all PNG in outputs by default...
 outputs/*.png
+
+# ...but keep the key charts used in README
+!outputs/lpt_price_ema.png
+!outputs/lpt_zscore.png
+!outputs/lpt_corr.png
+!outputs/lpt_apy.png
 
 # Logs
 *.log
-# runtime (ne pas versionner)
+# runtime (do not version)
 logs/*.log
 .agent_memory/*.json
 
-# optionnel — ignorer les rapports auto si tu ne veux pas les garder dans l'historique
+# Optional â€” ignore auto-generated reports if not needed in history
 # docs/agent_report_*.md
