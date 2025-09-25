@@ -1,4 +1,5 @@
 ﻿# Crypto AI Analytics — LPT Kit
+[![GitHub release](https://img.shields.io/github/v/release/cryptopromptaiHAH/crypto-ai-analytics)](https://github.com/cryptopromptaiHAH/crypto-ai-analytics/releases/latest)
 
 Quantitative monitoring of **Livepeer (LPT)**: data downloads, technical indicators, exported charts, and automatic README updates.
 
