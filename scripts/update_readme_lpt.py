@@ -1,7 +1,8 @@
 # scripts/update_readme_lpt.py
 # Met à jour README.md avec les graphes LPT générés.
-# Il insère/rafraîchit un bloc délimité par:
+# - Insère/rafraîchit le bloc délimité par:
 #   <!-- LPT-ASSETS:START --> ... <!-- LPT-ASSETS:END -->
+# - Supprime automatiquement l'ancienne section "Core charts (...)"
 #
 # Usage:
 #   python scripts/update_readme_lpt.py [days] [vs]
@@ -9,10 +10,12 @@
 
 from __future__ import annotations
 from pathlib import Path
+import re
 import sys
 
 MARK_START = "<!-- LPT-ASSETS:START -->"
 MARK_END = "<!-- LPT-ASSETS:END -->"
+
 
 def _ensure_src_on_path():
     here = Path(__file__).resolve()
@@ -28,12 +31,24 @@ _ensure_src_on_path()
 from common import utils  # noqa: E402
 
 
+def remove_legacy_core_charts(text: str) -> str:
+    """
+    Supprime tout bloc dont le titre commence par '## Core charts'.
+    On enlève jusqu'au prochain '## ' ou la fin de fichier.
+    """
+    pattern = re.compile(r"^##\s+Core charts.*?(?=^##\s+|\Z)", re.DOTALL | re.MULTILINE)
+    return re.sub(pattern, "", text).strip() + "\n"
+
+
 def build_block(days: int, vs: str) -> str:
     """Construit le bloc markdown à insérer dans le README."""
-    price  = Path("outputs/lpt_price_ema.png")
-    zscore = Path("outputs/lpt_zscore.png")
-    apy    = Path("outputs/lpt_apy.png")
-    missing = [p for p in (price, zscore, apy) if not p.exists()]
+    required = [
+        Path("outputs/lpt_price_ema.png"),
+        Path("outputs/lpt_zscore.png"),
+        Path("outputs/lpt_apy.png"),
+        Path("outputs/lpt_corr.png"),   # NEW
+    ]
+    missing = [p for p in required if not p.exists()]
     if missing:
         miss_list = ", ".join(str(m) for m in missing)
         raise FileNotFoundError(
@@ -55,13 +70,18 @@ def build_block(days: int, vs: str) -> str:
 
 **Rolling APY (30j)**
 ![LPT APY](outputs/lpt_apy.png)
+
+**Corrélation (60j) — vs BTC & ETH**
+![LPT Corr](outputs/lpt_corr.png)
 {MARK_END}
 """.strip()
 
 
 def upsert_block(readme_path: Path, days: int, vs: str) -> bool:
-    """Insère/remplace le bloc LPT-ASSETS dans README.md"""
+    """Insère/remplace le bloc LPT-ASSETS dans README.md et retire 'Core charts' legacy."""
     text = readme_path.read_text(encoding="utf-8")
+    text = remove_legacy_core_charts(text)
+
     block = build_block(days=days, vs=vs)
 
     if MARK_START in text and MARK_END in text:

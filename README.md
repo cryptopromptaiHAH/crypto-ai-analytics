@@ -25,4 +25,7 @@
 
 **Rolling APY (30j)**
 ![LPT APY](outputs/lpt_apy.png)
+
+**Corrélation (60j) — vs BTC & ETH**
+![LPT Corr](outputs/lpt_corr.png)
 <!-- LPT-ASSETS:END -->

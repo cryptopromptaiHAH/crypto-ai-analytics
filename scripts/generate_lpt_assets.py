@@ -1,7 +1,12 @@
 # scripts/generate_lpt_assets.py
 # Génère CSV + graphes pour LPT (Livepeer) :
 # - CSV: data/lpt_market_<days>d.csv
-# - PNG stables (overwrite): outputs/lpt_price_ema.png, outputs/lpt_zscore.png, outputs/lpt_apy.png
+# - PNG stables (overwrite):
+#     outputs/lpt_price_ema.png
+#     outputs/lpt_zscore.png
+#     outputs/lpt_apy.png
+#     outputs/lpt_corr.png   <-- NEW (corr 60j vs BTC/ETH)
+#
 # Options:
 #   --days 180   --vs usd   --offline   --force-refresh   --param-names
 #
@@ -61,6 +66,29 @@ def plot_apy(df, out_path: Path):
     utils.safe_plot_series(df.index, df["apy_30"], str(out_path), title="LPT — Rolling APY (30j)", ylabel="APY", label="APY(30)")
 
 
+def plot_corr(df_lpt, vs: str, days: int, out_path: Path):
+    """
+    Corrélation glissante (60j) de LPT vs BTC et ETH (mêmes 'days' et 'vs').
+    """
+    btc = utils.load_or_fetch_coin("BTC", vs=vs, days=days, force_refresh=False)
+    eth = utils.load_or_fetch_coin("ETH", vs=vs, days=days, force_refresh=False)
+
+    # Aligner sur l'index de LPT
+    btc = btc.reindex(df_lpt.index).interpolate()
+    eth = eth.reindex(df_lpt.index).interpolate()
+
+    corr_btc_60 = utils.shift_corr(df_lpt["price"], btc["price"], lag=0, window=60)
+    corr_eth_60 = utils.shift_corr(df_lpt["price"], eth["price"], lag=0, window=60)
+
+    series = {
+        "corr_btc_60": corr_btc_60,
+        "corr_eth_60": corr_eth_60,
+    }
+    utils.safe_plot_lines(df_lpt.index, series, str(out_path),
+                          title="Rolling Corr (60d) — LPT vs BTC/ETH",
+                          ylabel="corr")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Génère les assets LPT (CSV + PNG).")
     ap.add_argument("--days", type=int, default=180)
@@ -87,31 +115,38 @@ def main():
 
     df = compute_metrics(df)
 
+    # CSV paramétré (garde l'historique par fenêtre)
     csv_path = Path(f"data/lpt_market_{args.days}d.csv")
     df.to_csv(csv_path)
 
+    # Graphes (plots sûrs)
     out_price_ema = Path("outputs/lpt_price_ema.png")
     out_zscore    = Path("outputs/lpt_zscore.png")
     out_apy       = Path("outputs/lpt_apy.png")
+    out_corr      = Path("outputs/lpt_corr.png")  # NEW
 
     plot_price_ema(df, out_price_ema)
     plot_zscore(df, out_zscore)
     plot_apy(df, out_apy)
+    plot_corr(df, args.vs, args.days, out_corr)
 
     # Variantes paramétrées si demandé (copie simple des stables)
     if args.param_names:
         outv_price = Path(f"outputs/variants/lpt_price_ema_{args.days}d_{args.vs.lower()}.png")
         outv_z     = Path(f"outputs/variants/lpt_zscore_{args.days}d_{args.vs.lower()}.png")
         outv_apy   = Path(f"outputs/variants/lpt_apy_{args.days}d_{args.vs.lower()}.png")
+        outv_corr  = Path(f"outputs/variants/lpt_corr_{args.days}d_{args.vs.lower()}.png")
         outv_price.write_bytes(out_price_ema.read_bytes())
         outv_z.write_bytes(out_zscore.read_bytes())
         outv_apy.write_bytes(out_apy.read_bytes())
+        outv_corr.write_bytes(out_corr.read_bytes())
 
     print("=== LPT assets generated ===")
     print(f"CSV : {csv_path}")
     print(f"PNG : {out_price_ema}")
     print(f"PNG : {out_zscore}")
     print(f"PNG : {out_apy}")
+    print(f"PNG : {out_corr}")
     print(f"Range: last {args.days} days — vs={args.vs.lower()} — generated {utils.utc_today().isoformat()} UTC")
     return 0
 
