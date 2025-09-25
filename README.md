@@ -4,6 +4,18 @@ Quantitative monitoring of **Livepeer (LPT)**: data downloads, technical indicat
 
 ---
 
+## Quickstart
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/cryptopromptaiHAH/crypto-ai-analytics.git
+cd crypto-ai-analytics
+pip install -r requirements.txt
+```
+
+---
+
 ## Overview
 
 - **Data**: market history (Coingecko) over the selected window (default: 180 days).  
@@ -48,14 +60,17 @@ This kit automatically generates:
 
 ---
 
-## Strategic Analysis (PDF)
+### Strategic Analysis (PDF)
 
 - **LPT Strategy – Context, Allocation Rules & Risk/Reward**  
   **[Download the analysis (PDF)](docs/lpt_analysis.pdf)**
 
+*⚠️ Disclaimer: This analysis is provided for educational and informational purposes only.       It does not constitute financial, investment, or trading advice.  
+Do your own research and consult a professional before making investment decisions.*
+
 ---
 
-## Reproduce Locally
+### Reproduce Locally
 
 ```bash
 # 1) Generate assets (180 days vs USD)
@@ -63,3 +78,4 @@ python scripts/generate_lpt_assets.py --days 180 --vs usd
 
 # 2) Update the README automatically
 python scripts/update_readme_lpt.py 180 usd
+```
