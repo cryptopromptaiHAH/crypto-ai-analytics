@@ -15,7 +15,7 @@
 <!-- LPT-ASSETS:START -->
 ## LPT — Graphes (auto-générés)
 
-*Dernière mise à jour (UTC): **2025-09-25***
+*Dernière mise à jour (UTC): **2025-09-25** — Fenêtre: **180 jours** — Devise: **USD***
 
 **Price & EMAs**
 ![LPT Price & EMAs](outputs/lpt_price_ema.png)

@@ -3,7 +3,7 @@ import time
 import json
 import functools
 import logging
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Dict, Mapping
 from datetime import datetime, UTC, date
 
 import pandas as pd
@@ -208,7 +208,7 @@ def shift_corr(a: pd.Series, b: pd.Series, lag: int = 0, window: int = 60) -> pd
 def load_or_fetch_coin(coin_id_or_ticker: str, vs: str = "usd", days: int = 400, force_refresh: bool = False) -> pd.DataFrame:
     """
     Charge depuis cache local si dispo, sinon fetch depuis CoinGecko et sauvegarde.
-    Fichiers: data/cache_{coinIdResolu}_{vs}_{days}d.csv
+    Fichiers: data/cache_{resolved}_{vs}_{days}d.csv
     """
     resolved_id = resolve_coin_id(coin_id_or_ticker)
     os.makedirs("data", exist_ok=True)
@@ -246,6 +246,72 @@ def savefig_stable(path: str, width: int = 1200, height: int = 700, dpi: int = 1
     plt.savefig(path, dpi=dpi, transparent=False, bbox_inches="tight")
     plt.close()
 
+def save_placeholder_chart(path: str, title: str = "No data", message: str = "No data available",
+                           width: int = 1200, height: int = 700, dpi: int = 150):
+    """
+    Génère un graphique 'placeholder' clair lorsqu'il n'y a pas de données.
+    Évite d'obtenir des PNG vides (cadres blancs).
+    """
+    plt.figure(figsize=(width / 100, height / 100))
+    plt.title(title)
+    plt.text(0.5, 0.5, message, ha="center", va="center", fontsize=16, color="red", alpha=0.75)
+    plt.axis("off")
+    plt.savefig(path, dpi=dpi, bbox_inches="tight")
+    plt.close()
+
+def safe_plot_series(x, y, out_path: str, title: str,
+                     xlabel: str = "Date", ylabel: str = "", label: Optional[str] = None) -> bool:
+    """
+    Trace une série si les données sont suffisantes, sinon génère un placeholder.
+    Retourne True si le tracé a eu lieu, False si placeholder.
+    """
+    try:
+        import numpy as _np
+        arr = _np.asarray(y.dropna() if hasattr(y, "dropna") else y)
+        if arr.size < 2 or _np.all(~_np.isfinite(arr)):
+            save_placeholder_chart(out_path, title, "No data available")
+            return False
+    except Exception:
+        save_placeholder_chart(out_path, title, "Data error")
+        return False
+
+    plt.figure()
+    plt.plot(x, y, label=label if label else None)
+    plt.title(title)
+    plt.xlabel(xlabel); plt.ylabel(ylabel)
+    if label:
+        plt.legend()
+    savefig_stable(out_path)
+    return True
+
+def safe_plot_lines(x, series: Mapping[str, pd.Series], out_path: str, title: str,
+                    xlabel: str = "Date", ylabel: str = "") -> bool:
+    """
+    Trace plusieurs séries (label -> Series). Filtre automatiquement les séries vides/NaN.
+    Si aucune série valide: génère un placeholder. Retourne True si tracé, False sinon.
+    """
+    valid: Dict[str, pd.Series] = {}
+    for name, s in series.items():
+        try:
+            v = s.dropna()
+            if len(v) >= 2 and np.isfinite(v.values).any():
+                valid[name] = s
+        except Exception:
+            continue
+
+    if not valid:
+        save_placeholder_chart(out_path, title, "No data available")
+        return False
+
+    plt.figure()
+    for name, s in valid.items():
+        plt.plot(x, s, label=name)
+    plt.title(title)
+    plt.xlabel(xlabel); plt.ylabel(ylabel)
+    plt.legend()
+    savefig_stable(out_path)
+    return True
+
 # -----------------------------------------------------------------------------
 # Export public
 # -----------------------------------------------------------------------------
@@ -256,5 +322,5 @@ __all__ = [
     "cg_market_chart_range",
     "load_or_fetch_coin",
     "rolling_apy", "zscore", "ema", "shift_corr",
-    "savefig_stable",
+    "savefig_stable", "save_placeholder_chart", "safe_plot_series", "safe_plot_lines",
 ]

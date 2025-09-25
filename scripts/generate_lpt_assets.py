@@ -27,9 +27,7 @@ def _ensure_src_on_path():
 
 _ensure_src_on_path()
 
-# utils.py est à src/common/utils.py
 from common import utils   # noqa: E402
-import matplotlib.pyplot as plt  # noqa: E402
 
 
 def ensure_dirs():
@@ -47,36 +45,20 @@ def compute_metrics(df):
 
 
 def plot_price_ema(df, out_path: Path):
-    plt.figure()
-    plt.plot(df.index, df["price"], label="Price")
+    series = {"Price": df["price"]}
     if "ema_7" in df:
-        plt.plot(df.index, df["ema_7"], label="EMA 7")
+        series["EMA 7"] = df["ema_7"]
     if "ema_21" in df:
-        plt.plot(df.index, df["ema_21"], label="EMA 21")
-    plt.title("LPT — Price & EMAs")
-    plt.xlabel("Date"); plt.ylabel("Price")
-    plt.legend()
-    utils.savefig_stable(str(out_path))
+        series["EMA 21"] = df["ema_21"]
+    utils.safe_plot_lines(df.index, series, str(out_path), title="LPT — Price & EMAs", ylabel="Price")
 
 
 def plot_zscore(df, out_path: Path):
-    plt.figure()
-    plt.plot(df.index, df["z_60"], label="Z-Score(60)")
-    plt.axhline(0, linestyle="--")
-    plt.title("LPT — Z-Score (60j)")
-    plt.xlabel("Date"); plt.ylabel("Z")
-    plt.legend()
-    utils.savefig_stable(str(out_path))
+    utils.safe_plot_series(df.index, df["z_60"], str(out_path), title="LPT — Z-Score (60j)", ylabel="Z")
 
 
 def plot_apy(df, out_path: Path):
-    plt.figure()
-    plt.plot(df.index, df["apy_30"], label="APY(30j) approx")
-    plt.axhline(0, linestyle="--")
-    plt.title("LPT — Rolling APY (30j)")
-    plt.xlabel("Date"); plt.ylabel("APY")
-    plt.legend()
-    utils.savefig_stable(str(out_path))
+    utils.safe_plot_series(df.index, df["apy_30"], str(out_path), title="LPT — Rolling APY (30j)", ylabel="APY", label="APY(30)")
 
 
 def main():
@@ -85,20 +67,19 @@ def main():
     ap.add_argument("--vs", type=str, default="usd")
     ap.add_argument("--offline", action="store_true", help="N'utilise que le cache local (si présent).")
     ap.add_argument("--force-refresh", action="store_true", help="Ignore le cache et refait les fetchs.")
-    ap.add_argument("--param-names", action="store_true", help="Sauvegarde aussi des variantes nommées avec days/vs.")
+    ap.add_argument("--param-names", dest="param_names", action="store_true",
+                    help="Sauvegarde aussi des variantes nommées avec days/vs.")
     args = ap.parse_args()
 
     ensure_dirs()
 
     coin_id = utils.resolve_coin_id("LPT")  # 'LPT' -> 'livepeer'
 
-    # Mode offline: si le CSV cache n'existe pas, on échoue gentiment
     cache_csv = Path(f"data/cache_{coin_id}_{args.vs}_{args.days}d.csv")
     if args.offline and not cache_csv.exists():
         print(f"[ERROR] Mode offline: cache absent {cache_csv}. Relance sans --offline.")
         return 2
 
-    # Load/fetch
     df = utils.load_or_fetch_coin(coin_id, vs=args.vs, days=args.days, force_refresh=args.force_refresh)
     if df.empty:
         print("[WARN] Série vide renvoyée par CoinGecko.")
@@ -106,11 +87,9 @@ def main():
 
     df = compute_metrics(df)
 
-    # CSV paramétré (garde l'historique par fenêtre)
     csv_path = Path(f"data/lpt_market_{args.days}d.csv")
     df.to_csv(csv_path)
 
-    # PNG stables (overwrite)
     out_price_ema = Path("outputs/lpt_price_ema.png")
     out_zscore    = Path("outputs/lpt_zscore.png")
     out_apy       = Path("outputs/lpt_apy.png")
@@ -119,17 +98,15 @@ def main():
     plot_zscore(df, out_zscore)
     plot_apy(df, out_apy)
 
-    # Variantes paramétrées si demandé
-    if args.param-names:
+    # Variantes paramétrées si demandé (copie simple des stables)
+    if args.param_names:
         outv_price = Path(f"outputs/variants/lpt_price_ema_{args.days}d_{args.vs.lower()}.png")
         outv_z     = Path(f"outputs/variants/lpt_zscore_{args.days}d_{args.vs.lower()}.png")
         outv_apy   = Path(f"outputs/variants/lpt_apy_{args.days}d_{args.vs.lower()}.png")
-        # Copier les fichiers stables vers les variantes (évite un 2e rendu)
         outv_price.write_bytes(out_price_ema.read_bytes())
         outv_z.write_bytes(out_zscore.read_bytes())
         outv_apy.write_bytes(out_apy.read_bytes())
 
-    # Résumé
     print("=== LPT assets generated ===")
     print(f"CSV : {csv_path}")
     print(f"PNG : {out_price_ema}")
